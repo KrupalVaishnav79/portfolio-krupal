@@ -389,42 +389,254 @@ function ProjectCase({ project }) {
 
 function ProcessFlow() {
   return (
-    <div className="process-card">
+    <div className="process-showcase">
+      <article className="process-card diagram-card diagram-wide">
+        <DiagramChrome eyebrow="IDP Flow" title="Intelligent document processing pipeline" meta="Capture to export">
+          <IDPFlowSvg />
+        </DiagramChrome>
+      </article>
+
+      <article className="process-card diagram-card">
+        <DiagramChrome eyebrow="Architecture" title=".NET + React delivery map" meta="Frontend, API, data, integrations">
+          <ArchitectureSvg />
+        </DiagramChrome>
+      </article>
+
+      <article className="process-card diagram-card">
+        <DiagramChrome eyebrow="AI Workflow" title="AI-assisted build loop" meta="Prompt, code, review, ship">
+          <AIBuildLoopSvg />
+        </DiagramChrome>
+      </article>
+    </div>
+  );
+}
+
+function DiagramChrome({ eyebrow, title, meta, children }) {
+  return (
+    <>
       <div className="process-orbit" aria-hidden="true">
         <span />
         <span />
         <span />
       </div>
 
-      <div className="process-flow-header">
+      <div className="diagram-header">
         <div>
-          <span className="mini-kicker">Custom Flow Design</span>
-          <h3>AI document processing pipeline</h3>
+          <span className="mini-kicker">{eyebrow}</span>
+          <h3>{title}</h3>
         </div>
         <div className="process-status">
           <i />
-          Live workflow
+          {meta}
         </div>
       </div>
 
-      <div className="process-lane" aria-label="Custom IDP process flow">
-        {processSteps.map((step, index) => (
-          <article className="process-node" key={step.id}>
-            <span className="node-number">{step.id}</span>
-            <span className="node-icon">{step.icon}</span>
-            <h4>{step.title}</h4>
-            <p>{step.text}</p>
-            {index < processSteps.length - 1 && <span className="node-connector" aria-hidden="true" />}
-          </article>
-        ))}
+      <div className="svg-stage">
+        {children}
       </div>
+    </>
+  );
+}
 
-      <div className="process-output">
-        {["OCR", "AI Rules", "Confidence Score", "Review Queue", "ERP / CRM Export"].map((item) => (
-          <span key={item}>{item}</span>
-        ))}
-      </div>
-    </div>
+function IDPFlowSvg() {
+  return (
+    <svg className="process-svg idp-svg" viewBox="0 0 1120 430" role="img" aria-label="IDP document flow diagram">
+      <defs>
+        <linearGradient id="idpFlowGradient" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0%" stopColor="#4285f4" />
+          <stop offset="32%" stopColor="#34a853" />
+          <stop offset="66%" stopColor="#fbbc05" />
+          <stop offset="100%" stopColor="#ea4335" />
+        </linearGradient>
+        <filter id="idpGlow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="8" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      <rect className="svg-bg" x="18" y="18" width="1084" height="394" rx="34" />
+      <path className="svg-grid-line" d="M90 88 H1030 M90 342 H1030 M150 60 V370 M970 60 V370" />
+      <path
+        className="svg-flow-line"
+        d="M170 220 C250 130 310 130 390 220 S550 310 630 220 S790 130 870 220 S950 290 1000 220"
+      />
+      <circle className="svg-runner runner-blue" r="8" filter="url(#idpGlow)">
+        <animateMotion dur="7.4s" repeatCount="indefinite" path="M170 220 C250 130 310 130 390 220 S550 310 630 220 S790 130 870 220 S950 290 1000 220" />
+      </circle>
+      <circle className="svg-runner runner-green" r="6" filter="url(#idpGlow)">
+        <animateMotion begin="-2.4s" dur="7.4s" repeatCount="indefinite" path="M170 220 C250 130 310 130 390 220 S550 310 630 220 S790 130 870 220 S950 290 1000 220" />
+      </circle>
+      <circle className="svg-runner runner-yellow" r="5" filter="url(#idpGlow)">
+        <animateMotion begin="-4.8s" dur="7.4s" repeatCount="indefinite" path="M170 220 C250 130 310 130 390 220 S550 310 630 220 S790 130 870 220 S950 290 1000 220" />
+      </circle>
+
+      <g className="svg-node-card idp-node node-a">
+        <rect x="70" y="128" width="150" height="170" rx="24" />
+        <path className="doc-sheet" d="M111 164 h56 l24 24 v62 h-80 z" />
+        <path className="doc-fold" d="M167 164 v25 h24" />
+        <path className="doc-line" d="M126 210 h48 M126 230 h36 M126 250 h52" />
+        <text x="145" y="333" textAnchor="middle">Document Intake</text>
+      </g>
+
+      <g className="svg-node-card idp-node node-b">
+        <rect x="285" y="82" width="150" height="170" rx="24" />
+        <circle className="node-core" cx="360" cy="152" r="34" />
+        <path className="spark-path" d="M360 118 v68 M326 152 h68 M336 128 l48 48 M384 128 l-48 48" />
+        <text x="360" y="287" textAnchor="middle">AI Classification</text>
+      </g>
+
+      <g className="svg-node-card idp-node node-c">
+        <rect x="500" y="166" width="150" height="170" rx="24" />
+        <rect className="field-box" x="532" y="210" width="86" height="18" rx="5" />
+        <rect className="field-box delay-1" x="532" y="240" width="58" height="18" rx="5" />
+        <rect className="field-box delay-2" x="532" y="270" width="72" height="18" rx="5" />
+        <path className="scan-line" d="M522 198 H628" />
+        <text x="575" y="371" textAnchor="middle">Smart Extraction</text>
+      </g>
+
+      <g className="svg-node-card idp-node node-d">
+        <rect x="715" y="82" width="150" height="170" rx="24" />
+        <circle className="check-ring" cx="790" cy="158" r="42" />
+        <path className="check-mark" d="M767 158 l16 16 l35 -42" />
+        <text x="790" y="287" textAnchor="middle">Human Validation</text>
+      </g>
+
+      <g className="svg-node-card idp-node node-e">
+        <rect x="930" y="128" width="150" height="170" rx="24" />
+        <ellipse className="db-top" cx="1005" cy="172" rx="45" ry="16" />
+        <path className="db-body" d="M960 172 v70 c0 9 20 16 45 16 s45 -7 45 -16 v-70" />
+        <path className="db-line" d="M960 208 c0 9 20 16 45 16 s45 -7 45 -16" />
+        <text x="1005" y="333" textAnchor="middle">ERP / CRM Export</text>
+      </g>
+    </svg>
+  );
+}
+
+function ArchitectureSvg() {
+  return (
+    <svg className="process-svg architecture-svg" viewBox="0 0 1120 430" role="img" aria-label=".NET React architecture diagram">
+      <defs>
+        <linearGradient id="archGradient" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stopColor="#64e5bd" />
+          <stop offset="48%" stopColor="#4285f4" />
+          <stop offset="100%" stopColor="#d7a14f" />
+        </linearGradient>
+      </defs>
+
+      <rect className="svg-bg" x="18" y="18" width="1084" height="394" rx="34" />
+      <circle className="arch-orbit orbit-one" cx="560" cy="214" r="144" />
+      <circle className="arch-orbit orbit-two" cx="560" cy="214" r="210" />
+
+      <path className="arch-line" d="M288 152 C390 124 450 136 515 185" />
+      <path className="arch-line delay-1" d="M288 282 C398 314 464 288 520 242" />
+      <path className="arch-line delay-2" d="M604 184 C690 112 770 112 868 154" />
+      <path className="arch-line delay-3" d="M608 246 C704 318 778 314 872 274" />
+      <path className="arch-line delay-4" d="M560 134 C560 94 560 78 560 58" />
+
+      <g className="arch-center">
+        <circle cx="560" cy="214" r="78" />
+        <text x="560" y="204" textAnchor="middle">.NET API</text>
+        <text x="560" y="232" textAnchor="middle">Business Core</text>
+      </g>
+
+      <g className="arch-box arch-react">
+        <rect x="92" y="94" width="196" height="118" rx="22" />
+        <text x="190" y="143" textAnchor="middle">React Dashboard</text>
+        <text x="190" y="171" textAnchor="middle">Admin UI / Forms</text>
+      </g>
+
+      <g className="arch-box arch-mobile">
+        <rect x="92" y="236" width="196" height="118" rx="22" />
+        <text x="190" y="285" textAnchor="middle">Client Portal</text>
+        <text x="190" y="313" textAnchor="middle">Mobile Ready</text>
+      </g>
+
+      <g className="arch-box arch-data">
+        <rect x="832" y="94" width="196" height="118" rx="22" />
+        <text x="930" y="143" textAnchor="middle">SQL / MongoDB</text>
+        <text x="930" y="171" textAnchor="middle">Reports + Data</text>
+      </g>
+
+      <g className="arch-box arch-integrations">
+        <rect x="832" y="236" width="196" height="118" rx="22" />
+        <text x="930" y="285" textAnchor="middle">Integrations</text>
+        <text x="930" y="313" textAnchor="middle">Razorpay / AI / APIs</text>
+      </g>
+
+      <g className="arch-cloud">
+        <rect x="454" y="36" width="212" height="58" rx="20" />
+        <text x="560" y="72" textAnchor="middle">Deploy + Monitoring</text>
+      </g>
+
+      <circle className="arch-pulse pulse-a" cx="344" cy="139" r="7" />
+      <circle className="arch-pulse pulse-b" cx="738" cy="136" r="7" />
+      <circle className="arch-pulse pulse-c" cx="738" cy="294" r="7" />
+    </svg>
+  );
+}
+
+function AIBuildLoopSvg() {
+  return (
+    <svg className="process-svg ai-loop-svg" viewBox="0 0 1120 430" role="img" aria-label="AI assisted development loop diagram">
+      <defs>
+        <linearGradient id="aiLoopGradient" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0%" stopColor="#4285f4" />
+          <stop offset="35%" stopColor="#34a853" />
+          <stop offset="70%" stopColor="#fbbc05" />
+          <stop offset="100%" stopColor="#ea4335" />
+        </linearGradient>
+      </defs>
+
+      <rect className="svg-bg" x="18" y="18" width="1084" height="394" rx="34" />
+      <g className="loop-orbits">
+        <circle className="loop-ring ring-one" cx="560" cy="214" r="150" />
+        <circle className="loop-ring ring-two" cx="560" cy="214" r="224" />
+        <g className="svg-spin">
+          <circle className="loop-dot dot-a" cx="560" cy="64" r="7" />
+          <circle className="loop-dot dot-b" cx="784" cy="214" r="6" />
+          <circle className="loop-dot dot-c" cx="560" cy="364" r="7" />
+          <circle className="loop-dot dot-d" cx="336" cy="214" r="6" />
+        </g>
+      </g>
+
+      <g className="loop-center">
+        <rect x="436" y="156" width="248" height="116" rx="32" />
+        <text x="560" y="205" textAnchor="middle">Developer Review</text>
+        <text x="560" y="234" textAnchor="middle">Manual QA + Clean Code</text>
+      </g>
+
+      <g className="loop-card loop-top">
+        <rect x="436" y="46" width="248" height="74" rx="22" />
+        <text x="560" y="78" textAnchor="middle">Requirement Breakdown</text>
+        <text x="560" y="101" textAnchor="middle">scope, modules, risks</text>
+      </g>
+
+      <g className="loop-card loop-right">
+        <rect x="792" y="170" width="230" height="88" rx="22" />
+        <text x="907" y="205" textAnchor="middle">AI Pair Coding</text>
+        <text x="907" y="230" textAnchor="middle">Codex / Claude / Cursor</text>
+      </g>
+
+      <g className="loop-card loop-bottom">
+        <rect x="436" y="310" width="248" height="74" rx="22" />
+        <text x="560" y="342" textAnchor="middle">Refactor + Test</text>
+        <text x="560" y="365" textAnchor="middle">debug, build, validate</text>
+      </g>
+
+      <g className="loop-card loop-left">
+        <rect x="98" y="170" width="230" height="88" rx="22" />
+        <text x="213" y="205" textAnchor="middle">Production Handoff</text>
+        <text x="213" y="230" textAnchor="middle">deploy, docs, support</text>
+      </g>
+
+      <path className="loop-connector" d="M560 120 C680 128 758 158 792 200" />
+      <path className="loop-connector delay-1" d="M792 232 C740 312 670 338 684 347" />
+      <path className="loop-connector delay-2" d="M436 347 C320 330 270 280 328 226" />
+      <path className="loop-connector delay-3" d="M328 196 C350 124 438 90 436 84" />
+    </svg>
   );
 }
 
@@ -641,11 +853,11 @@ export default function App() {
           <div className="section-heading split">
             <div>
               <span className="kicker">Process Flow</span>
-              <h2>Custom IDP workflow visual for intelligent document processing.</h2>
+              <h2>Three custom SVG diagrams for process, architecture, and AI delivery.</h2>
             </div>
             <p>
-              A custom animated section that explains how uploaded documents move through AI classification,
-              extraction, validation, and business-system export.
+              Big animated visuals designed for the portfolio, not pasted from a template: document processing,
+              full-stack architecture, and AI-assisted development workflow.
             </p>
           </div>
 
