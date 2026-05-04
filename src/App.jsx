@@ -580,7 +580,7 @@ function ArchitectureSvg() {
 
 function AIBuildLoopSvg() {
   return (
-    <svg className="process-svg ai-loop-svg" viewBox="0 0 1120 430" role="img" aria-label="AI assisted development loop diagram">
+    <svg className="process-svg ai-loop-svg" viewBox="0 0 1120 430" role="img" aria-label="AI assisted development pipeline diagram">
       <defs>
         <linearGradient id="aiLoopGradient" x1="0" x2="1" y1="0" y2="0">
           <stop offset="0%" stopColor="#4285f4" />
@@ -588,54 +588,68 @@ function AIBuildLoopSvg() {
           <stop offset="70%" stopColor="#fbbc05" />
           <stop offset="100%" stopColor="#ea4335" />
         </linearGradient>
+        <filter id="aiGlow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="7" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
       </defs>
 
       <rect className="svg-bg" x="18" y="18" width="1084" height="394" rx="34" />
-      <g className="loop-orbits">
-        <circle className="loop-ring ring-one" cx="560" cy="214" r="150" />
-        <circle className="loop-ring ring-two" cx="560" cy="214" r="224" />
-        <g className="svg-spin">
-          <circle className="loop-dot dot-a" cx="560" cy="64" r="7" />
-          <circle className="loop-dot dot-b" cx="784" cy="214" r="6" />
-          <circle className="loop-dot dot-c" cx="560" cy="364" r="7" />
-          <circle className="loop-dot dot-d" cx="336" cy="214" r="6" />
-        </g>
+      <path className="ai-bg-line" d="M86 100 H1034 M86 330 H1034" />
+      <path className="ai-pipeline-line" d="M128 214 H992" />
+      <path className="ai-review-branch" d="M560 214 C560 162 612 138 674 138 H792" />
+      <path className="ai-review-branch delay-1" d="M560 214 C560 270 612 294 674 294 H792" />
+
+      <circle className="loop-dot dot-a" r="8" filter="url(#aiGlow)">
+        <animateMotion dur="6.2s" repeatCount="indefinite" path="M128 214 H992" />
+      </circle>
+      <circle className="loop-dot dot-b" r="6" filter="url(#aiGlow)">
+        <animateMotion begin="-2.1s" dur="6.2s" repeatCount="indefinite" path="M128 214 H992" />
+      </circle>
+      <circle className="loop-dot dot-c" r="5" filter="url(#aiGlow)">
+        <animateMotion begin="-4.2s" dur="6.2s" repeatCount="indefinite" path="M128 214 H992" />
+      </circle>
+
+      <g className="ai-stage stage-one">
+        <rect x="72" y="154" width="160" height="120" rx="24" />
+        <text x="152" y="198" textAnchor="middle">Requirement</text>
+        <text x="152" y="224" textAnchor="middle">scope + modules</text>
       </g>
 
-      <g className="loop-center">
-        <rect x="436" y="156" width="248" height="116" rx="32" />
-        <text x="560" y="205" textAnchor="middle">Developer Review</text>
-        <text x="560" y="234" textAnchor="middle">Manual QA + Clean Code</text>
+      <g className="ai-stage stage-two">
+        <rect x="272" y="154" width="160" height="120" rx="24" />
+        <text x="352" y="198" textAnchor="middle">AI Planning</text>
+        <text x="352" y="224" textAnchor="middle">Codex / Claude</text>
       </g>
 
-      <g className="loop-card loop-top">
-        <rect x="436" y="46" width="248" height="74" rx="22" />
-        <text x="560" y="78" textAnchor="middle">Requirement Breakdown</text>
-        <text x="560" y="101" textAnchor="middle">scope, modules, risks</text>
+      <g className="ai-stage stage-three">
+        <rect x="472" y="154" width="176" height="120" rx="28" />
+        <text x="560" y="196" textAnchor="middle">Code Build</text>
+        <text x="560" y="222" textAnchor="middle">React + .NET + SQL</text>
       </g>
 
-      <g className="loop-card loop-right">
-        <rect x="792" y="170" width="230" height="88" rx="22" />
-        <text x="907" y="205" textAnchor="middle">AI Pair Coding</text>
-        <text x="907" y="230" textAnchor="middle">Codex / Claude / Cursor</text>
+      <g className="ai-gate gate-review">
+        <rect x="750" y="86" width="210" height="104" rx="26" />
+        <path d="M810 138 l24 24 l56 -62" />
+        <text x="855" y="136" textAnchor="middle">Developer Review</text>
+        <text x="855" y="162" textAnchor="middle">manual QA + security</text>
       </g>
 
-      <g className="loop-card loop-bottom">
-        <rect x="436" y="310" width="248" height="74" rx="22" />
-        <text x="560" y="342" textAnchor="middle">Refactor + Test</text>
-        <text x="560" y="365" textAnchor="middle">debug, build, validate</text>
+      <g className="ai-gate gate-test">
+        <rect x="750" y="242" width="210" height="104" rx="26" />
+        <path d="M806 294 h96 M806 314 h62" />
+        <text x="855" y="288" textAnchor="middle">Test + Deploy</text>
+        <text x="855" y="316" textAnchor="middle">build, docs, support</text>
       </g>
 
-      <g className="loop-card loop-left">
-        <rect x="98" y="170" width="230" height="88" rx="22" />
-        <text x="213" y="205" textAnchor="middle">Production Handoff</text>
-        <text x="213" y="230" textAnchor="middle">deploy, docs, support</text>
+      <g className="ai-output">
+        <rect x="972" y="154" width="92" height="120" rx="24" />
+        <path d="M1006 192 h24 M1006 214 h24 M1006 236 h24" />
+        <text x="1018" y="304" textAnchor="middle">Ship</text>
       </g>
-
-      <path className="loop-connector" d="M560 120 C680 128 758 158 792 200" />
-      <path className="loop-connector delay-1" d="M792 232 C740 312 670 338 684 347" />
-      <path className="loop-connector delay-2" d="M436 347 C320 330 270 280 328 226" />
-      <path className="loop-connector delay-3" d="M328 196 C350 124 438 90 436 84" />
     </svg>
   );
 }
