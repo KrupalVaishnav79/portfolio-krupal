@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
+  BrainCircuit,
   Bot,
   BriefcaseBusiness,
   CheckCircle2,
   Code2,
   Database,
   Download,
+  FileCheck2,
+  FileInput,
   Globe2,
   Layers3,
   Menu,
@@ -26,7 +29,7 @@ const whatsappText = encodeURIComponent(
   "Hi Krupal, I saw your portfolio and want to discuss a project / opportunity."
 );
 const whatsappUrl = `https://wa.me/${phone}?text=${whatsappText}`;
-const resumePath = "/Krupa_vaishnav_dotnet_final_with_projects.docx";
+const resumePath = `${import.meta.env.BASE_URL}Krupa_vaishnav_dotnet_final_with_projects.docx`;
 
 const stats = [
   ["~3 Years", "Professional experience"],
@@ -179,6 +182,39 @@ const services = [
   "AI-assisted development support with manual review"
 ];
 
+const processSteps = [
+  {
+    id: "01",
+    icon: <FileInput />,
+    title: "Document Intake",
+    text: "PDFs, scans, forms, invoices, and uploaded files enter a structured processing queue."
+  },
+  {
+    id: "02",
+    icon: <Bot />,
+    title: "AI Classification",
+    text: "AI identifies document type, priority, source, and the extraction rules needed for the file."
+  },
+  {
+    id: "03",
+    icon: <BrainCircuit />,
+    title: "Smart Extraction",
+    text: "Key fields are extracted from documents using OCR, AI prompts, and business validation logic."
+  },
+  {
+    id: "04",
+    icon: <FileCheck2 />,
+    title: "Human Validation",
+    text: "Users review low-confidence fields, correct data, and approve the final document output."
+  },
+  {
+    id: "05",
+    icon: <Database />,
+    title: "System Export",
+    text: "Approved data moves into ERP, CRM, reports, databases, APIs, or downstream workflows."
+  }
+];
+
 const aiGroups = [
   {
     title: "Coding & IDE Assistants",
@@ -237,6 +273,7 @@ function Header() {
   const [open, setOpen] = useState(false);
   const links = [
     ["Work", "#work"],
+    ["Process", "#process"],
     ["Expertise", "#expertise"],
     ["AI Tools", "#ai"],
     ["Experience", "#experience"],
@@ -347,6 +384,47 @@ function ProjectCase({ project }) {
         </ul>
       </div>
     </article>
+  );
+}
+
+function ProcessFlow() {
+  return (
+    <div className="process-card">
+      <div className="process-orbit" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+
+      <div className="process-flow-header">
+        <div>
+          <span className="mini-kicker">Custom Flow Design</span>
+          <h3>AI document processing pipeline</h3>
+        </div>
+        <div className="process-status">
+          <i />
+          Live workflow
+        </div>
+      </div>
+
+      <div className="process-lane" aria-label="Custom IDP process flow">
+        {processSteps.map((step, index) => (
+          <article className="process-node" key={step.id}>
+            <span className="node-number">{step.id}</span>
+            <span className="node-icon">{step.icon}</span>
+            <h4>{step.title}</h4>
+            <p>{step.text}</p>
+            {index < processSteps.length - 1 && <span className="node-connector" aria-hidden="true" />}
+          </article>
+        ))}
+      </div>
+
+      <div className="process-output">
+        {["OCR", "AI Rules", "Confidence Score", "Review Queue", "ERP / CRM Export"].map((item) => (
+          <span key={item}>{item}</span>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -557,6 +635,21 @@ export default function App() {
               <p>Builds clear, responsive React screens for admin users, clients, teams, and internal operations.</p>
             </div>
           </div>
+        </section>
+
+        <section className="process-section section-block" id="process">
+          <div className="section-heading split">
+            <div>
+              <span className="kicker">Process Flow</span>
+              <h2>Custom IDP workflow visual for intelligent document processing.</h2>
+            </div>
+            <p>
+              A custom animated section that explains how uploaded documents move through AI classification,
+              extraction, validation, and business-system export.
+            </p>
+          </div>
+
+          <ProcessFlow />
         </section>
 
         <section className="section-block" id="expertise">
