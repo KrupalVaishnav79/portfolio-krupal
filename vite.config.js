@@ -9,7 +9,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: "0.0.0.0",
-    port: Number(process.env.PORT) || 5173
+    port: Number(process.env.PORT) || 5173,
+    allowedHosts: ["portfolio-krupal.onrender.com"]
   },
   preview: {
     host: "0.0.0.0",
