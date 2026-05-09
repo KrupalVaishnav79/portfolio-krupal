@@ -546,24 +546,30 @@ function ProcessFlow() {
 
 function PipelineDiagram() {
   const steps = [
-    ["01", "Capture", "PDFs, forms, uploads"],
-    ["02", "Classify", "type, source, priority"],
-    ["03", "Extract", "OCR + AI fields"],
-    ["04", "Validate", "human review gate"],
-    ["05", "Export", "ERP, CRM, reports"]
+    { id: "01", title: "Capture", text: "PDFs, forms, uploads", tools: ["React", "Web API"], tone: "blue" },
+    { id: "02", title: "Classify", text: "type, source, priority", tools: ["Codex", "Claude"], tone: "green" },
+    { id: "03", title: "Extract", text: "OCR + AI fields", tools: ["ASP.NET Core", "SQL Server"], tone: "yellow" },
+    { id: "04", title: "Validate", text: "review, approve, correct", tools: ["React", "TypeScript"], tone: "red" },
+    { id: "05", title: "Export", text: "ERP, CRM, reports", tools: ["Dapper", "SignalR"], tone: "violet" }
   ];
 
   return (
     <div className="modern-diagram pipeline-diagram">
+      <div className="diagram-backdrop-label">Document Automation Flow</div>
       <div className="diagram-rail" aria-hidden="true">
         <span />
         <span />
       </div>
-      {steps.map(([id, title, text]) => (
-        <div className="diagram-node" key={id}>
-          <small>{id}</small>
-          <strong>{title}</strong>
-          <span>{text}</span>
+      {steps.map((step) => (
+        <div className={`diagram-node tone-${step.tone}`} key={step.id}>
+          <small>{step.id}</small>
+          <strong>{step.title}</strong>
+          <span>{step.text}</span>
+          <div className="mini-tech-row">
+            {step.tools.map((tool) => (
+              <em key={tool}>{tool}</em>
+            ))}
+          </div>
         </div>
       ))}
     </div>
@@ -572,22 +578,33 @@ function PipelineDiagram() {
 
 function ArchitectureDiagram() {
   const layers = [
-    ["React UI", "Dashboards, forms, grids"],
-    [".NET APIs", "Auth, RBAC, services"],
-    ["SQL Server", "Reports, SPs, Dapper"],
-    ["Integrations", "Payments, mail, files"]
+    { title: "React UI", text: "Dashboards, forms, grids", tools: ["React", "TypeScript"], tone: "blue" },
+    { title: ".NET APIs", text: "Auth, RBAC, services", tools: ["ASP.NET Core", "Web API"], tone: "green" },
+    { title: "SQL Layer", text: "Reports, SPs, Dapper", tools: ["SQL Server", "Dapper"], tone: "yellow" },
+    { title: "Integrations", text: "Payments, mail, files", tools: ["Razorpay", "SignalR"], tone: "red" }
   ];
 
   return (
     <div className="modern-diagram architecture-diagram">
       <div className="architecture-core">
+        <div className="core-ring" aria-hidden="true" />
         <strong>Business App</strong>
         <span>.NET + React</span>
+        <div className="core-tech-icons">
+          {["ASP.NET Core", "React", "SQL Server"].map((tool) => (
+            <img key={tool} src={techLogos.find((item) => item.name === tool)?.src} alt="" />
+          ))}
+        </div>
       </div>
-      {layers.map(([title, text], index) => (
-        <div className={`arch-node arch-node-${index + 1}`} key={title}>
-          <strong>{title}</strong>
-          <span>{text}</span>
+      {layers.map((layer, index) => (
+        <div className={`arch-node arch-node-${index + 1} tone-${layer.tone}`} key={layer.title}>
+          <strong>{layer.title}</strong>
+          <span>{layer.text}</span>
+          <div className="mini-tech-row">
+            {layer.tools.map((tool) => (
+              <em key={tool}>{tool}</em>
+            ))}
+          </div>
         </div>
       ))}
       <i className="arch-line line-a" />
@@ -600,10 +617,10 @@ function ArchitectureDiagram() {
 
 function AIDeliveryDiagram() {
   const loop = [
-    ["Plan", "requirements + risks"],
-    ["Draft", "scaffold + SQL help"],
-    ["Review", "manual checks"],
-    ["Ship", "test + handoff"]
+    { title: "Plan", text: "requirements + risks", tools: ["Codex", "Claude"], tone: "blue" },
+    { title: "Draft", text: "components + APIs", tools: ["Cursor", "React"], tone: "green" },
+    { title: "Review", text: "manual checks", tools: ["ASP.NET Core", "SQL Server"], tone: "yellow" },
+    { title: "Ship", text: "test + deploy", tools: ["Git", "Web API"], tone: "red" }
   ];
 
   return (
@@ -612,11 +629,18 @@ function AIDeliveryDiagram() {
         <Bot size={24} />
         <strong>AI Assisted</strong>
         <span>Developer reviewed</span>
+        <div className="ai-core-pulse" aria-hidden="true" />
       </div>
-      {loop.map(([title, text], index) => (
-        <div className={`ai-loop-node ai-loop-${index + 1}`} key={title}>
-          <strong>{title}</strong>
-          <span>{text}</span>
+      <div className="ai-loop-path" aria-hidden="true" />
+      {loop.map((step, index) => (
+        <div className={`ai-loop-node ai-loop-${index + 1} tone-${step.tone}`} key={step.title}>
+          <strong>{step.title}</strong>
+          <span>{step.text}</span>
+          <div className="mini-tech-row">
+            {step.tools.map((tool) => (
+              <em key={tool}>{tool}</em>
+            ))}
+          </div>
         </div>
       ))}
     </div>
@@ -1057,30 +1081,39 @@ export default function App() {
 
   useEffect(() => {
     const root = document.documentElement;
+    const canUsePointerEffects = window.matchMedia("(pointer: fine)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const profilePanel = document.querySelector(".profile-panel");
+    let pointerFrame = 0;
+    let lastPointerEvent = null;
+
+    const applyPointerEffects = () => {
+      pointerFrame = 0;
+      if (!lastPointerEvent) return;
+
+      const { clientX, clientY } = lastPointerEvent;
+      root.style.setProperty("--mouse-x", `${clientX}px`);
+      root.style.setProperty("--mouse-y", `${clientY}px`);
+
+      if (!profilePanel) return;
+
+      const rect = profilePanel.getBoundingClientRect();
+      const inside = clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+
+      if (inside) {
+        const x = (clientX - rect.left) / rect.width - 0.5;
+        const y = (clientY - rect.top) / rect.height - 0.5;
+        profilePanel.style.setProperty("--tilt-y", `${(x * 5).toFixed(2)}deg`);
+        profilePanel.style.setProperty("--tilt-x", `${(-y * 5).toFixed(2)}deg`);
+      } else {
+        profilePanel.style.setProperty("--tilt-x", "0deg");
+        profilePanel.style.setProperty("--tilt-y", "0deg");
+      }
+    };
 
     const updatePointer = (event) => {
-      root.style.setProperty("--mouse-x", `${event.clientX}px`);
-      root.style.setProperty("--mouse-y", `${event.clientY}px`);
-
-      const profilePanel = document.querySelector(".profile-panel");
-      if (profilePanel) {
-        const rect = profilePanel.getBoundingClientRect();
-        const inside =
-          event.clientX >= rect.left &&
-          event.clientX <= rect.right &&
-          event.clientY >= rect.top &&
-          event.clientY <= rect.bottom;
-
-        if (inside) {
-          const x = (event.clientX - rect.left) / rect.width - 0.5;
-          const y = (event.clientY - rect.top) / rect.height - 0.5;
-          profilePanel.style.setProperty("--tilt-y", `${(x * 7).toFixed(2)}deg`);
-          profilePanel.style.setProperty("--tilt-x", `${(-y * 7).toFixed(2)}deg`);
-        } else {
-          profilePanel.style.setProperty("--tilt-x", "0deg");
-          profilePanel.style.setProperty("--tilt-y", "0deg");
-        }
-      }
+      if (!canUsePointerEffects) return;
+      lastPointerEvent = event;
+      if (!pointerFrame) pointerFrame = requestAnimationFrame(applyPointerEffects);
     };
 
     const updateScrollProgress = () => {
@@ -1148,13 +1181,14 @@ export default function App() {
       if (section) navObserver.observe(section);
     });
 
-    window.addEventListener("pointermove", updatePointer, { passive: true });
+    if (canUsePointerEffects) window.addEventListener("pointermove", updatePointer, { passive: true });
     window.addEventListener("scroll", updateScrollProgress, { passive: true });
     window.addEventListener("resize", updateScrollProgress, { passive: true });
     document.addEventListener("pointerdown", handleTapRipple, { passive: true });
 
     return () => {
-      window.removeEventListener("pointermove", updatePointer);
+      if (canUsePointerEffects) window.removeEventListener("pointermove", updatePointer);
+      if (pointerFrame) cancelAnimationFrame(pointerFrame);
       window.removeEventListener("scroll", updateScrollProgress);
       window.removeEventListener("resize", updateScrollProgress);
       document.removeEventListener("pointerdown", handleTapRipple);
