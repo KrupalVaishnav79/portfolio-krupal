@@ -5,6 +5,7 @@ import {
   Bot,
   BriefcaseBusiness,
   CheckCircle2,
+  ChevronDown,
   Code2,
   Database,
   Download,
@@ -31,11 +32,20 @@ const whatsappText = encodeURIComponent(
 const whatsappUrl = `https://wa.me/${phone}?text=${whatsappText}`;
 const resumePath = `${import.meta.env.BASE_URL}Krupa_vaishnav_dotnet_final_with_projects.docx`;
 
+const navLinks = [
+  ["Work", "#work"],
+  ["Process", "#process"],
+  ["Expertise", "#expertise"],
+  ["AI Tools", "#ai"],
+  ["Experience", "#experience"],
+  ["Contact", "#contact"]
+];
+
 const stats = [
-  ["~3 Years", "Professional experience"],
-  ["5", "Detailed project case studies"],
-  [".NET + React", "Primary delivery stack"],
-  ["Job + Freelance", "Available for opportunities"]
+  { value: "~3 Years", label: "Professional experience", countTo: 3, prefix: "~", suffix: " Years" },
+  { value: "5", label: "Detailed project case studies", countTo: 5 },
+  { value: ".NET + React", label: "Primary delivery stack" },
+  { value: "Job + Freelance", label: "Available for opportunities" }
 ];
 
 const profileFacts = [
@@ -243,6 +253,42 @@ const quickQuestions = [
   { label: "Contact", hint: "WhatsApp and hiring", prompt: "How can I contact?" }
 ];
 
+const marqueeTech = [
+  "ASP.NET Core",
+  "React",
+  "SQL Server",
+  "Web API",
+  "TypeScript",
+  "Dapper",
+  "SignalR",
+  "MongoDB",
+  "Razorpay",
+  "Codex",
+  "Claude",
+  "Cursor"
+];
+
+const techLogos = [
+  { name: "ASP.NET Core", src: "https://cdn.simpleicons.org/dotnet/512BD4" },
+  { name: "React", src: "https://cdn.simpleicons.org/react/61DAFB" },
+  { name: "SQL Server", src: "https://cdn.simpleicons.org/microsoftsqlserver/CC2927" },
+  { name: "Web API", src: "https://cdn.simpleicons.org/swagger/85EA2D" },
+  { name: "TypeScript", src: "https://cdn.simpleicons.org/typescript/3178C6" },
+  { name: "Dapper", src: "https://cdn.simpleicons.org/dotnet/8A6CEB" },
+  { name: "SignalR", src: "https://cdn.simpleicons.org/microsoftazure/0078D4" },
+  { name: "MongoDB", src: "https://cdn.simpleicons.org/mongodb/47A248" },
+  { name: "Razorpay", src: "https://cdn.simpleicons.org/razorpay/0C2451" },
+  { name: "Codex", src: "https://cdn.simpleicons.org/openai/FFFFFF" },
+  { name: "Claude", src: "https://cdn.simpleicons.org/anthropic/D97757" },
+  { name: "Cursor", src: "https://cdn.simpleicons.org/cursor/FFFFFF" }
+];
+
+const codeLines = [
+  "build(api).with('ASP.NET Core')",
+  "ship(ui).using('React + TypeScript')",
+  "review(aiOutput).then(cleanCode)"
+];
+
 function getBotAnswer(input) {
   const text = input.toLowerCase();
 
@@ -269,16 +315,8 @@ function getBotAnswer(input) {
   return "Krupal is a .NET and React developer focused on business web applications, APIs, dashboards, ERP/CRM modules, SQL workflows, and AI-assisted delivery. Ask about projects, skills, AI tools, experience, or contact.";
 }
 
-function Header() {
+function Header({ activeSection }) {
   const [open, setOpen] = useState(false);
-  const links = [
-    ["Work", "#work"],
-    ["Process", "#process"],
-    ["Expertise", "#expertise"],
-    ["AI Tools", "#ai"],
-    ["Experience", "#experience"],
-    ["Contact", "#contact"]
-  ];
 
   return (
     <header className="site-header">
@@ -291,8 +329,8 @@ function Header() {
       </a>
 
       <nav className={open ? "nav-links open" : "nav-links"} aria-label="Primary navigation">
-        {links.map(([label, href]) => (
-          <a key={href} href={href} onClick={() => setOpen(false)}>
+        {navLinks.map(([label, href]) => (
+          <a key={href} className={activeSection === href.slice(1) ? "active" : undefined} href={href} onClick={() => setOpen(false)}>
             {label}
           </a>
         ))}
@@ -312,6 +350,84 @@ function Header() {
         </button>
       </div>
     </header>
+  );
+}
+
+function HeroCodeStream() {
+  return (
+    <div className="hero-code-stream" aria-label="Animated development workflow">
+      <span className="stream-dot" />
+      <div>
+        {codeLines.map((line) => (
+          <code key={line}>{line}</code>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TechMarquee() {
+  const repeated = [...techLogos, ...techLogos];
+
+  return (
+    <section className="tech-marquee logo-marquee" aria-label="Technology stack logos">
+      <div className="marquee-track">
+        {repeated.map((item, index) => (
+          <span className="tech-logo-chip" key={`${item.name}-${index}`}>
+            <img src={item.src} alt="" loading="lazy" />
+            {item.name}
+          </span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function AnimatedStat({ stat }) {
+  const [visible, setVisible] = useState(false);
+  const [displayValue, setDisplayValue] = useState(stat.countTo ? 0 : stat.value);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!stat.countTo || !ref.current) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
+      { threshold: 0.55 }
+    );
+    observer.observe(ref.current);
+
+    return () => observer.disconnect();
+  }, [stat.countTo]);
+
+  useEffect(() => {
+    if (!visible || !stat.countTo) return undefined;
+
+    let frameId;
+    const start = performance.now();
+    const duration = 1100;
+
+    const tick = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplayValue(Math.round(eased * stat.countTo));
+
+      if (progress < 1) frameId = requestAnimationFrame(tick);
+    };
+
+    frameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frameId);
+  }, [visible, stat.countTo]);
+
+  const value = stat.countTo ? `${stat.prefix || ""}${displayValue}${stat.suffix || ""}` : displayValue;
+
+  return (
+    <div ref={ref}>
+      <strong>{value}</strong>
+      <span>{stat.label}</span>
+    </div>
   );
 }
 
@@ -350,8 +466,10 @@ function ProfilePanel() {
 }
 
 function ProjectCase({ project }) {
+  const [expanded, setExpanded] = useState(false);
+
   return (
-    <article className="case-card">
+    <article className={expanded ? "case-card is-expanded" : "case-card"}>
       <div className="case-index">
         <span>{project.id}</span>
         {project.icon}
@@ -366,6 +484,10 @@ function ProjectCase({ project }) {
             <span key={item}>{item}</span>
           ))}
         </div>
+        <button className="case-toggle" type="button" onClick={() => setExpanded((value) => !value)} aria-expanded={expanded}>
+          {expanded ? "Hide details" : "View details"}
+          <ChevronDown size={16} />
+        </button>
       </div>
 
       <div className="case-detail">
@@ -392,21 +514,111 @@ function ProcessFlow() {
     <div className="process-showcase">
       <article className="process-card diagram-card diagram-wide">
         <DiagramChrome eyebrow="IDP Flow" title="Intelligent document processing pipeline" meta="Capture to export">
-          <IDPFlowSvg />
+          <PipelineDiagram />
         </DiagramChrome>
       </article>
 
       <article className="process-card diagram-card">
         <DiagramChrome eyebrow="Architecture" title=".NET + React delivery map" meta="Frontend, API, data, integrations">
-          <ArchitectureSvg />
+          <ArchitectureDiagram />
         </DiagramChrome>
       </article>
 
       <article className="process-card diagram-card">
         <DiagramChrome eyebrow="AI Workflow" title="AI-assisted build loop" meta="Prompt, code, review, ship">
-          <AIBuildLoopSvg />
+          <AIDeliveryDiagram />
         </DiagramChrome>
       </article>
+
+      <div className="mobile-process-steps" aria-label="Mobile process steps">
+        {processSteps.map((step) => (
+          <article key={step.id}>
+            <span>{step.id}</span>
+            <div>{step.icon}</div>
+            <h3>{step.title}</h3>
+            <p>{step.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PipelineDiagram() {
+  const steps = [
+    ["01", "Capture", "PDFs, forms, uploads"],
+    ["02", "Classify", "type, source, priority"],
+    ["03", "Extract", "OCR + AI fields"],
+    ["04", "Validate", "human review gate"],
+    ["05", "Export", "ERP, CRM, reports"]
+  ];
+
+  return (
+    <div className="modern-diagram pipeline-diagram">
+      <div className="diagram-rail" aria-hidden="true">
+        <span />
+        <span />
+      </div>
+      {steps.map(([id, title, text]) => (
+        <div className="diagram-node" key={id}>
+          <small>{id}</small>
+          <strong>{title}</strong>
+          <span>{text}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ArchitectureDiagram() {
+  const layers = [
+    ["React UI", "Dashboards, forms, grids"],
+    [".NET APIs", "Auth, RBAC, services"],
+    ["SQL Server", "Reports, SPs, Dapper"],
+    ["Integrations", "Payments, mail, files"]
+  ];
+
+  return (
+    <div className="modern-diagram architecture-diagram">
+      <div className="architecture-core">
+        <strong>Business App</strong>
+        <span>.NET + React</span>
+      </div>
+      {layers.map(([title, text], index) => (
+        <div className={`arch-node arch-node-${index + 1}`} key={title}>
+          <strong>{title}</strong>
+          <span>{text}</span>
+        </div>
+      ))}
+      <i className="arch-line line-a" />
+      <i className="arch-line line-b" />
+      <i className="arch-line line-c" />
+      <i className="arch-line line-d" />
+    </div>
+  );
+}
+
+function AIDeliveryDiagram() {
+  const loop = [
+    ["Plan", "requirements + risks"],
+    ["Draft", "scaffold + SQL help"],
+    ["Review", "manual checks"],
+    ["Ship", "test + handoff"]
+  ];
+
+  return (
+    <div className="modern-diagram ai-delivery-diagram">
+      <div className="ai-core">
+        <Bot size={24} />
+        <strong>AI Assisted</strong>
+        <span>Developer reviewed</span>
+      </div>
+      {loop.map(([title, text], index) => (
+        <div className={`ai-loop-node ai-loop-${index + 1}`} key={title}>
+          <strong>{title}</strong>
+          <span>{text}</span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -821,15 +1033,149 @@ function ChatBot() {
   );
 }
 
+function FloatingActionDock() {
+  return (
+    <nav className="mobile-action-dock" aria-label="Quick portfolio actions">
+      <a href="#work">
+        <BriefcaseBusiness size={15} />
+        Projects
+      </a>
+      <a href={resumePath} download>
+        <Download size={15} />
+        Resume
+      </a>
+      <a href={whatsappUrl} target="_blank" rel="noreferrer">
+        <MessageCircle size={15} />
+        WhatsApp
+      </a>
+    </nav>
+  );
+}
+
 export default function App() {
+  const [activeSection, setActiveSection] = useState("work");
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    const updatePointer = (event) => {
+      root.style.setProperty("--mouse-x", `${event.clientX}px`);
+      root.style.setProperty("--mouse-y", `${event.clientY}px`);
+
+      const profilePanel = document.querySelector(".profile-panel");
+      if (profilePanel) {
+        const rect = profilePanel.getBoundingClientRect();
+        const inside =
+          event.clientX >= rect.left &&
+          event.clientX <= rect.right &&
+          event.clientY >= rect.top &&
+          event.clientY <= rect.bottom;
+
+        if (inside) {
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+          profilePanel.style.setProperty("--tilt-y", `${(x * 7).toFixed(2)}deg`);
+          profilePanel.style.setProperty("--tilt-x", `${(-y * 7).toFixed(2)}deg`);
+        } else {
+          profilePanel.style.setProperty("--tilt-x", "0deg");
+          profilePanel.style.setProperty("--tilt-y", "0deg");
+        }
+      }
+    };
+
+    const updateScrollProgress = () => {
+      const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
+      const progress = Math.min(window.scrollY / maxScroll, 1);
+      root.style.setProperty("--scroll-progress", `${progress}`);
+      root.style.setProperty("--parallax-y", `${Math.round(window.scrollY * 0.05)}px`);
+    };
+
+    const handleTapRipple = (event) => {
+      if (!(event.target instanceof Element)) return;
+
+      const target = event.target.closest(
+        ".case-card, .expertise-card, .service-grid div, .timeline article, .ai-groups article, .process-card, .intro-grid div, .stats-strip div, .mobile-action-dock a"
+      );
+      if (!target) return;
+
+      const rect = target.getBoundingClientRect();
+      target.style.setProperty("--tap-x", `${event.clientX - rect.left}px`);
+      target.style.setProperty("--tap-y", `${event.clientY - rect.top}px`);
+      target.classList.remove("tap-ripple");
+      void target.offsetWidth;
+      target.classList.add("tap-ripple");
+      window.setTimeout(() => target.classList.remove("tap-ripple"), 620);
+    };
+
+    root.classList.add("reveal-ready");
+    updateScrollProgress();
+
+    const revealTargets = document.querySelectorAll(
+      ".section-block, .ai-section, .contact-section, .process-card, .case-card, .timeline article, .tech-marquee"
+    );
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add("is-visible");
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+    );
+    revealTargets.forEach((target) => revealObserver.observe(target));
+
+    const activeObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.toggle("is-active-card", entry.isIntersecting);
+        });
+      },
+      { threshold: 0.6, rootMargin: "-28% 0px -28% 0px" }
+    );
+    document.querySelectorAll(".case-card, .timeline article").forEach((target) => activeObserver.observe(target));
+
+    const navObserver = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visible?.target?.id) setActiveSection(visible.target.id);
+      },
+      { threshold: [0.22, 0.45, 0.68], rootMargin: "-18% 0px -58% 0px" }
+    );
+    navLinks.forEach(([, href]) => {
+      const section = document.querySelector(href);
+      if (section) navObserver.observe(section);
+    });
+
+    window.addEventListener("pointermove", updatePointer, { passive: true });
+    window.addEventListener("scroll", updateScrollProgress, { passive: true });
+    window.addEventListener("resize", updateScrollProgress, { passive: true });
+    document.addEventListener("pointerdown", handleTapRipple, { passive: true });
+
+    return () => {
+      window.removeEventListener("pointermove", updatePointer);
+      window.removeEventListener("scroll", updateScrollProgress);
+      window.removeEventListener("resize", updateScrollProgress);
+      document.removeEventListener("pointerdown", handleTapRipple);
+      revealObserver.disconnect();
+      activeObserver.disconnect();
+      navObserver.disconnect();
+      root.classList.remove("reveal-ready");
+    };
+  }, []);
+
   return (
     <div className="app" id="top">
+      <div className="scroll-progress" aria-hidden="true">
+        <span />
+      </div>
       <div className="ambient-bg" aria-hidden="true">
         <span />
         <span />
         <span />
       </div>
-      <Header />
+      <Header activeSection={activeSection} />
 
       <main>
         <section className="hero-shell">
@@ -857,19 +1203,19 @@ export default function App() {
                 Download Resume
               </a>
             </div>
+            <HeroCodeStream />
           </div>
 
           <ProfilePanel />
         </section>
 
         <section className="stats-strip" aria-label="Portfolio highlights">
-          {stats.map(([value, label]) => (
-            <div key={label}>
-              <strong>{value}</strong>
-              <span>{label}</span>
-            </div>
+          {stats.map((stat) => (
+            <AnimatedStat key={stat.label} stat={stat} />
           ))}
         </section>
+
+        <TechMarquee />
 
         <section className="section-block intro-section">
           <div className="section-heading">
@@ -1029,7 +1375,7 @@ export default function App() {
 
       <footer>
         <span>Krupal Vaishnav</span>
-        <a href="https://linkedin.com/in/krupal-vaishnav" target="_blank" rel="noreferrer">
+        <a href="https://www.linkedin.com/in/krupal-vaishnav-dotnet/" target="_blank" rel="noreferrer">
           LinkedIn
         </a>
         <a href={resumePath} download>
@@ -1040,6 +1386,7 @@ export default function App() {
         </a>
       </footer>
 
+      <FloatingActionDock />
       <ChatBot />
     </div>
   );
