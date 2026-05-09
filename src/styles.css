@@ -1048,27 +1048,27 @@ h4 {
   animation-delay: -2.4s;
 }
 
-.pipeline-diagram .diagram-node:nth-of-type(1) {
+.pipeline-diagram .diagram-node:nth-child(2) {
   top: 46%;
   left: 5%;
 }
 
-.pipeline-diagram .diagram-node:nth-of-type(2) {
+.pipeline-diagram .diagram-node:nth-child(3) {
   top: 18%;
   left: 25%;
 }
 
-.pipeline-diagram .diagram-node:nth-of-type(3) {
+.pipeline-diagram .diagram-node:nth-child(4) {
   top: 52%;
   left: 43%;
 }
 
-.pipeline-diagram .diagram-node:nth-of-type(4) {
+.pipeline-diagram .diagram-node:nth-child(5) {
   top: 18%;
   right: 24%;
 }
 
-.pipeline-diagram .diagram-node:nth-of-type(5) {
+.pipeline-diagram .diagram-node:nth-child(6) {
   top: 46%;
   right: 5%;
 }
@@ -3808,11 +3808,11 @@ footer a:hover {
   .architecture-core,
   .ai-core,
   .ai-loop-node,
-  .pipeline-diagram .diagram-node:nth-of-type(1),
-  .pipeline-diagram .diagram-node:nth-of-type(2),
-  .pipeline-diagram .diagram-node:nth-of-type(3),
-  .pipeline-diagram .diagram-node:nth-of-type(4),
-  .pipeline-diagram .diagram-node:nth-of-type(5),
+  .pipeline-diagram .diagram-node:nth-child(2),
+  .pipeline-diagram .diagram-node:nth-child(3),
+  .pipeline-diagram .diagram-node:nth-child(4),
+  .pipeline-diagram .diagram-node:nth-child(5),
+  .pipeline-diagram .diagram-node:nth-child(6),
   .arch-node-1,
   .arch-node-2,
   .arch-node-3,
